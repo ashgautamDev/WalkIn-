@@ -7,10 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ashish.walkin.model.Banner
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,26 +17,27 @@ class MainViewModel @Inject constructor(private val repository: WalkInRepository
 private val _categoryState = MutableStateFlow<ViewState>(ViewState.Loading)
     val categoryState = _categoryState.asStateFlow()
 
-     private lateinit var  _banner : Banner
-     val bannerUrl = _banner.image
+//     private val  _banner : Banner =
+//     val bannerUrl = _banner.image
 
-    init {
-        viewModelScope.launch {
-            repository.getApiData().collect{data ->
-                if (data.categories.isNullOrEmpty()){
-                    _categoryState.value = ViewState.Empty
-                }
-                else {
-                    _categoryState.value = ViewState.Success(data.categories)
-                }
-            }
 
-            repository.getApiData().collect{
-                _banner = it.banners[0]
-            }
+   fun getData() = viewModelScope.launch {
+       _categoryState.value = ViewState.Loading
+            repository.getApiData()
+                .catch { e->
+                    _categoryState.value = ViewState.Error(e)
+
+                }.collect{ data->
+                    _categoryState.value = ViewState.Success(data)
+
+                }
+//
+//            repository.getApiData().collect{
+//                _banner = it.banners[0]
+//            }
 
         }
-    }
+
 
 
 }

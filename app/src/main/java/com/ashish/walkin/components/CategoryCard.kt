@@ -1,9 +1,9 @@
 package com.ashish.walkin.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -12,40 +12,56 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ashish.walkin.model.Item
-import com.ashish.walkin.ui.theme.Shapes
+import coil.ImageLoader
+import com.ashish.walkin.R
+import com.ashish.walkin.model.Category
+import com.google.accompanist.coil.rememberCoilPainter
 
 @Composable
-fun CategoryCard(item: Item) {
+fun CategoryCard(category: Category) {
     Card(
 
-        shape = RoundedCornerShape(32.dp),
-        modifier = Modifier.background(MaterialTheme.colors.primary),
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier.padding(8.dp),
         elevation = 16.dp,
-        backgroundColor = MaterialTheme.colors.surface ,
+        backgroundColor = MaterialTheme.colors.surface,
     ) {
-        ItemCard(item)
+        ItemCard(category)
     }
 }
 
 @Composable
-fun ItemCard(item: Item) {
+fun ItemCard(category: Category, modifier: Modifier = Modifier, textSize: TextUnit = 18.sp) {
+    val context = LocalContext.current
+    val painter = rememberCoilPainter(
+        request = category.icon,
+        imageLoader = ImageLoader.invoke(context)
+    )
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(5.dp)
+    ,
+        modifier = Modifier.padding(vertical = 4.dp)
     ) {
         Image(
-            painter = painterResource(id = item.itemImage),
+            painter = painter ?: painterResource(id = R.drawable.home_active),
             contentDescription = "",
-            modifier = Modifier.size(50.dp)
+            modifier = modifier.size(50.dp)
         )
-        Text(text = item.itemName, fontSize = 24.sp, color = MaterialTheme.colors.onSurface)
+        category.name?.let {
+            Text(
+                text = it,
+                fontSize = textSize,
+                color = MaterialTheme.colors.onSurface
+            )
+        }
     }
 }
+
+
 

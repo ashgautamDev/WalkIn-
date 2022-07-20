@@ -29,7 +29,7 @@ fun TopBar(location : String = "Noida") {
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colors.background).
-                padding(16.dp)
+                padding(horizontal = 16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.Bottom
@@ -46,20 +46,10 @@ fun TopBar(location : String = "Noida") {
         Row(
             verticalAlignment = Alignment.Bottom
         ) {
-            Image(painter = painterResource(id = R.drawable.ic_search), contentDescription ="" , modifier = Modifier.size(24.dp))
+            Image(painter = painterResource(id = R.drawable.ic_search), contentDescription ="" , modifier = Modifier.size(18.dp))
             Spacer(modifier = Modifier.width(8.dp))
-            Image(painter = painterResource(id = R.drawable.ic_notification), contentDescription ="",modifier = Modifier.size(24.dp ))
+            Image(painter = painterResource(id = R.drawable.ic_notification), contentDescription ="",modifier = Modifier.size(18.dp ))
 
         }
     }
-}
-
-@Preview
-@Composable
-fun TopAppBarPrev() {
-    WalkInTheme {
-        TopBar()
-
-    }
-
 }
